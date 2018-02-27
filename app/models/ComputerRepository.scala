@@ -73,7 +73,7 @@ class ComputerRepository @Inject()(dbapi: DBApi, companyRepository: CompanyRepos
    */
   def list(page: Int = 0, pageSize: Int = 10, orderBy: Int = 1, filter: String = "%"): Future[Page[(Computer, Option[Company])]] = Future {
 
-    val offest = pageSize * page
+    val offset = pageSize * page
 
     db.withConnection { implicit connection =>
 
@@ -87,7 +87,7 @@ class ComputerRepository @Inject()(dbapi: DBApi, companyRepository: CompanyRepos
         """
       ).on(
         'pageSize -> pageSize,
-        'offset -> offest,
+        'offset -> offset,
         'filter -> filter,
         'orderBy -> orderBy
       ).as(withCompany *)
@@ -102,7 +102,7 @@ class ComputerRepository @Inject()(dbapi: DBApi, companyRepository: CompanyRepos
         'filter -> filter
       ).as(scalar[Long].single)
 
-      Page(computers, page, offest, totalRows)
+      Page(computers, page, offset, totalRows)
 
     }
 
